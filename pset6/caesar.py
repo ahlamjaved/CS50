@@ -1,5 +1,5 @@
-import cs50
 import sys
+import cs50
 
 def main():
 
@@ -11,37 +11,38 @@ def main():
         exit(1)
 
     #once argv is checked for correct number of input, place in variable k to begin the cipher
-    k = int (sys.argv[1])
+    k = int(sys.argv[1])
 
     # make sure integer is not a negative value
     if k < 1:
         print("Please Try Again")
         sys.exit(1)
 
-    print("plaintext: ", end = "")
+    print("plaintext: ", end="")
 
     # ask user to input a string to cipher
     string = cs50.get_string()
-    print("ciphertext: ", end = "")
+    print("ciphertext: ", end="")
 
-    # the if- else if  condition determines if the character is upper or lower case then converts it based on k
+    #condition determines if the character is upper/lower case then converts it based on k
     if string is not None:
-        for i in range ( len(string)):
+        for i in range(len(string)):
             c = 0
 
             if string[i].isupper():
-                c = ((ord (string[i]) - 65 + k) % 26 )+ 65
-                print(chr(c), end = "" )
+                c = ((ord(string[i]) - 65 + k) % 26 )+ 65
+                print(chr(c), end="")
 
             elif string[i].islower():
                 c = ((ord(string[i]) - 97 + k) % 26) + 97
-                print(chr(c), end = "")
+                print(chr(c), end="")
 
             # if the character is neither upper.  or lower case i.e non letter character
             else:
-                print(string[i] , end = "")
+                print(string[i] , end="")
 
     print()
 
 if __name__ == "__main__":
     main()
+    
