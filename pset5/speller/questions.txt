@@ -1,0 +1,25 @@
+0.  pneumonoultramicroscopicsilicovolcanoconiosis is the longest word in pset5 dictionary (word 95138) . It is also a made up word
+    regarding lung disease from ash and sand inhalation.
+
+1.  This function reports resource usage totals for processes specified by processes, storing the information in *rusage.
+    Returns resource usage measures for who
+
+2.  there are 16 variables
+
+3.  The reason we pass before and after by reference (instead of by value) to calculate, even though we’re not changing their
+    contents is because C requires passing structs by reference within functions. we dont pass by value, because
+    the size would be much too large.
+
+4.  Speller.c reads words from the file, character by character, using a for loop to begin reading the first character of
+    the file, incrementing by one character until it reaches the end of the file. If the character is a letter or apostrophe,
+    it is added to a word. If the word becomes larger than what we defined as the largest word possible (which we already know
+    its pneumonoultramicroscopicsilicovolcanoconiosis), the word is ignored. If the word has a digit, it is also ignored. If a
+    word still exists, it is counted, checked for spelling, and printed. The amount of time it takes to complete the
+    checking is logged in ti_check.
+
+5.  fgetc reads the file character by character, discriminating vs anything that isn't alphabetical or an apostrophe proceeded by
+    a character. fscanf reads until white space and stores the array in a buffer, the array may contain commas etc which would
+    cause problems for the misspelling function.
+
+6.  The const type ensures that the initial value of the parameter cannot be modified. This means that each word we are checking
+    along with the dictionary cannot be changed. This safety measure is useful as these values should be consistent.

@@ -1,0 +1,14 @@
+1.  A header file that declares a set of integer types having specified widths.
+2.  In order to allocate a certain amount of memory for an int, instead of simply having 4 bytes of memory for an int.
+3.  A BYTE is 8 bits, a WORD is 32 bits, a LONG is 32 bits, and a WORD is 16 bits
+4.  The first two bytes in a BMP files are the letters B and M.
+5.  bfSize is the size of the whole bmp file, which includes the headerfiles. biSize is the size of the
+    BITMAPINFOHEADER header file. biSize is constant and it equals 40 bytes
+6.  The bitmap is a top-down DIB with the origin at the upper left corner.
+7.  biBitCount
+8.  The file might not exist or be unable to be written to.
+9.  We are reading the files one struct at a time.
+10. 3
+11. Sets your position in the file forward by the offset you specify either from the beginning of the file,
+    your current position, or the end of the file, whichever you choose.
+12. Gives the current position of the file.
