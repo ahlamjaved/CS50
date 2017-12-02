@@ -34,12 +34,13 @@ def main():
         sys.exit("Sorry no tweets to show ")
 
     # analyze tweets and score
-    score = analyzer.analyze(sys.argv[1])
-    if score > 0.0:
-        print(colored(f"{score} {tweets}", "green"))
-    elif score < 0.0:
-        print(colored(f"{score} {tweets}", "red"))
-    else:
-        print(colored(f"{score} {tweets}", "yellow"))
+    for tweet in tweets:
+        score = analyzer.analyze(sys.argv[1])
+        if score > 0.0:
+            print(colored(f"{score} {tweets}", "green")
+        elif score < 0.0:
+            print(colored(f"{score} {tweets}", "red")
+        else:
+            print(colored(f"{score} {tweet}", "yellow")
 if __name__ == "__main__":
     main()
