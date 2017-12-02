@@ -22,6 +22,24 @@ def main():
 
     # get screen name
     screen_name = sys.argv[1].strip('@')
-    
+
+    if screen_name is None:
+        sys.exit("Sorry this Screen name is invalid")
+
+    # get screen_name's last 50 tweets
+    tweets = helpers.get_user_timeline(screen_name, 50)
+
+    # if function fails, return error message
+    if tweets is None:
+        sys.exit("Sorry no tweets to show ")
+
+    # analyze tweets and score
+    score = analyzer.analyze(sys.argv[1])
+    if score > 0.0:
+        print(colored(f"{score} {tweets}", "green"))
+    elif score < 0.0:
+        print(colored(f"{score} {tweets}", "red"))
+    else:
+        print(colored(f"{score} {tweets}", "yellow"))
 if __name__ == "__main__":
     main()
