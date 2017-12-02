@@ -20,8 +20,7 @@ def search():
     # get screen_name's tweets
     tweets = helpers.get_user_timeline(screen_name)
 
-    # TODO
-    positive, negative, neutral = 0.0, 0.0, 100.0
+    positive, negative, neutral = 0.0, 0.0, 0.0
 
     # generate chart
     chart = helpers.chart(positive, negative, neutral)
