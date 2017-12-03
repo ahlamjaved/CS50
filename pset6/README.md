@@ -25,4 +25,4 @@ $ ./tweets @cs50
 ```
 
 6. Implement a website that generates a pie chart categorizing a user’s tweets:
-![Sentiment Part 3](./SentimentsPart3.png =250x250)
+![Sentiment Part 3](./SentimentsPart3.png)
