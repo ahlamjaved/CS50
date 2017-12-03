@@ -1,4 +1,4 @@
-# The following programs are as follow:
+# The programs in pset1 are as follow:
 
 1. Implement a "hello, world" program
 
