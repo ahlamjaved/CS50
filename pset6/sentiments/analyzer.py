@@ -7,7 +7,6 @@ class Analyzer():
         """Initialize Analyzer."""
 
         self.positives = set()
-        self.negative = set()
 
         file = open(positives, 'r')
         for line in file:
@@ -15,6 +14,8 @@ class Analyzer():
                 continue
             else:
                 self.positives.add(line.rstrip("\n"))
+
+        self.negative = set()
 
         file = open(negatives, 'r')
         for line in file:
@@ -29,13 +30,15 @@ class Analyzer():
         tokenizer = nltk.tokenize.TweetTokenizer()
         tokens = tokenizer.tokenize(text)
         score = 0
+        print(len(tokens))
         # to iterate over words in tweet (tokens) and see if word is pos or neg
-        for str in tokens:
+        for word in tokens:
             # check to see if this token is positive or negative
-            if str.lower() in self.positives:
+            if word.lower() in self.positives:
                 score += 1
-            elif str.lower() in self.negative:
+            elif word.lower() in self.negative:
                 score -= 1
             else:
                 continue
         return score
+

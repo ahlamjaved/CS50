@@ -35,12 +35,12 @@ def main():
 
     # analyze tweets and score
     for tweet in tweets:
-        score = analyzer.analyze(sys.argv[1])
+        score = analyzer.analyze(tweet)
         if score > 0.0:
-            print(colored(f"{score} {tweets}", "green")
+            print(colored(f"{score} {tweets}", "green"))
         elif score < 0.0:
-            print(colored(f"{score} {tweets}", "red")
+            print(colored(f"{score} {tweets}", "red"))
         else:
-            print(colored(f"{score} {tweet}", "yellow")
+            print(colored(f"{score} {tweet}", "yellow"))
 if __name__ == "__main__":
     main()
