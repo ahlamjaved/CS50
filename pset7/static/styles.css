@@ -9,19 +9,19 @@
 /* colors for navbar */
 .navbar-default .navbar-brand .blue
 {
-    color: #537fbe;
+    color: #0a66e6;
 }
 .navbar-default .navbar-brand .red
 {
-    color: #ea433b;
+    color: #db1912;
 }
 .navbar-default .navbar-brand .yellow
 {
-    color: #f5b82e;
+    color: #e6a10f;
 }
 .navbar-default .navbar-brand .green
 {
-    color: #2e944b;
+    color: #0ebd3f;
 }
 
 main .form-control
