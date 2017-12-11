@@ -33,7 +33,30 @@ db = SQL("sqlite:///finance.db") #pylint: disable=not-callable
 @app.route("/")
 @login_required
 def index():
-    return apology("TODO")
+    #selects each symbol owned by the users as well as the amount
+    portfolio_symbols = db.execute("SELECT shares, symbol \
+                                    From portfolio WHERE id = :id", \
+                                    id=session["user_id"])
+
+    #temp variable to store the value of the TOTAL amount plus the shares
+    total_cash = 0
+
+    #update each symbol's price and the total
+    for portfolio_symbol in portfolio_symbols:
+        symbol = portfolio_symbol["symbol"]
+        shares = portfolio_symbol["shares"]
+        stock = lookup(symbol)
+        total = shares * stock["price"]
+        total.cash += total
+        db.execute("UPDATE portfolio SET price=:price, \
+                    total=:total WHERE id=:id AND symbol=:symbol", \
+                    price=usd(stock["price"]), \
+                    total=usd(total), id=session["user_id"], symbol=symbol)
+
+    #update cash in portfolio
+    update_cash = db.execute("SELECT cash FROM users \
+                               WHERE")
+
 
 @app.route("/buy", methods=["GET", "POST"])
 @login_required
