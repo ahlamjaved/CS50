@@ -53,16 +53,24 @@ def index():
                     price=usd(stock["price"]), \
                     total=usd(total), id=session["user_id"], symbol=symbol)
 
-    #update cash in portfolio
+    # update cash in portfolio
     update_cash = db.execute("SELECT cash FROM users \
-                               WHERE")
+                               WHERE id=:id", id=session["user_id"])
 
+    # update the total amount= cash + shares
+    total_cash += updated_cash[0]["cash"]
+
+    # print the portfolio in the index.html page
+    updated_portfolio = db.execute("SELECT * from portfolio \
+                                    WHERE id=:id", id=session["user_id"])
+
+    return render_template("index.html", stocks=updated_portfolio, \
+                            cash=usd(update_cash[0]["cash"]), total=usd(total_cash))
 
 @app.route("/buy", methods=["GET", "POST"])
 @login_required
 def buy():
     """Buy shares of stock."""
-    return apology("TODO")
 
 @app.route("/history")
 @login_required
