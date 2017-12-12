@@ -58,7 +58,7 @@ def index():
                                WHERE id=:id", id=session["user_id"])
 
     # update the total amount= cash + shares
-    total_cash += updated_cash[0]["cash"]
+    total_cash += update_cash[0]["cash"]
 
     # print the portfolio in the index.html page
     updated_portfolio = db.execute("SELECT * from portfolio \
@@ -72,11 +72,40 @@ def index():
 def buy():
     """Buy shares of stock."""
 
+    if request.method == "GET":
+        return render_template("/buy")
+    else:
+        # verify correct symbol
+        stock = lookup(request_form_get("symbol"))
+        if not stock:
+            return apology("Incorrect Symbol!")
+        
+        # verify correct number of shares
+        try:
+            share = int(request_form_get("shares"))
+            if shares < 0:
+                return apology("Shares must be greater than zero!")
+        except:
+            return apology("Shares must be greater than zero!")
+
+        # select cash
+        money = db.except("SELECT cash FROM users WHERE id=:id," \
+                            id=session["user_id"])
+        
+        # is money enough to buy stock
+        if money["cash"] < stock["price"] * shares:
+            return apology("Sorry, not enough money!")
+
+
+
 @app.route("/history")
 @login_required
 def history():
     """Show history of transactions."""
-    return apology("TODO")
+
+    histories = db.execute("SELECT * from histories WHERE id=:id", id=session["user_id"])
+    
+    return render_template("/history", histories=histories)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
