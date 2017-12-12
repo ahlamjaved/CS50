@@ -28,7 +28,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # configure CS50 Library to use SQLite database
-db = SQL("sqlite:///finance.db") #pylint: disable=not-callable
+db = SQL("sqlite:///finance.db") #pylint: disable=not-callable; 
 
 @app.route("/")
 @login_required
@@ -73,29 +73,34 @@ def buy():
     """Buy shares of stock."""
 
     if request.method == "GET":
-        return render_template("/buy")
+        return render_template("buy.html")
     else:
         # verify correct symbol
-        stock = lookup(request_form_get("symbol"))
+        stock = lookup(request.form.get("symbol"))
         if not stock:
             return apology("Incorrect Symbol!")
-        
+
         # verify correct number of shares
         try:
-            share = int(request_form_get("shares"))
+            shares = int(request.form.get("shares"))
             if shares < 0:
                 return apology("Shares must be greater than zero!")
         except:
             return apology("Shares must be greater than zero!")
 
         # select cash
-        money = db.except("SELECT cash FROM users WHERE id=:id," \
+        money = db.execute("SELECT cash FROM users WHERE id = :id", \
                             id=session["user_id"])
-        
+
         # is money enough to buy stock
         if money["cash"] < stock["price"] * shares:
             return apology("Sorry, not enough money!")
 
+        # update history
+        db.execute("INSERT INTO histories (symbol, shares, price, id) \
+                    VALUES(:symbol, :shares, :price, :id)", \
+                    symbol=stock["symbol"], shares=shares, \
+                    price=usd(stock["price"]), id=session["user_id"])
 
 
 @app.route("/history")
@@ -104,7 +109,6 @@ def history():
     """Show history of transactions."""
 
     histories = db.execute("SELECT * from histories WHERE id=:id", id=session["user_id"])
-    
     return render_template("/history", histories=histories)
 
 @app.route("/login", methods=["GET", "POST"])
@@ -161,7 +165,28 @@ def quote():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """Register user."""
-    return apology("TODO")
+
+    if request.method == "POST":
+        
+        # verifies username was inputted
+        if not request.form.get("username"):
+            return apology("Must provide username!")
+
+        # verifies password was submitted 
+        elif not request.form.get("password"):
+            return apology("Must provide password!")
+
+        # verifiy that both the password and the confirmation match
+        elif request.form.get("password") != request.for.get("password again"):
+            return apology("password does not match. Please try again.")
+
+        # now that the user entered username and both password and the confirmation
+        # insert the new user in the list of users within the db
+        # this also sotres the password as a hash for security measures
+        esult = db.execute("INSERT INTO users (username, hash) \
+                             VALUES(:username, :hash)", \
+                             username=request.form.get("username"), \
+                             hash=pwd_context.encrypt(request.form.get("password")))
 
 @app.route("/sell", methods=["GET", "POST"])
 @login_required
