@@ -177,7 +177,7 @@ def register():
             return apology("Must provide password!")
 
         # verifiy that both the password and the confirmation match
-        elif request.form.get("password") != request.for.get("password again"):
+        elif request.form.get("password") != request.form.get("password again"):
             return apology("password does not match. Please try again.")
 
         # now that the user entered username and both password and the confirmation
@@ -187,6 +187,17 @@ def register():
                              VALUES(:username, :hash)", \
                              username=request.form.get("username"), \
                              hash=pwd_context.encrypt(request.form.get("password")))
+
+        if not result:
+            return apology("Sorry, this username already exists!")
+
+        # remember the username that is currently logged in
+        session["user_id"] = result
+
+        # redirect the user to the homepage once logged in
+        return redirect("/index"))
+    else:
+        return render_template("/register")
 
 @app.route("/sell", methods=["GET", "POST"])
 @login_required
