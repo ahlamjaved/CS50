@@ -102,6 +102,34 @@ def buy():
                     symbol=stock["symbol"], shares=shares, \
                     price=usd(stock["price"]), id=session["user_id"])
 
+        # update user's cash
+        db.execute("UPDATE users SET cash = cash - :purchase WHERE id = :id", \
+                    id=session["user_id"], \
+                    purchase=stock["price"] * float(shares))
+
+        # select user's shares based on the symbol
+        user_shares = db.execute("SELECT shares FROM portfolio \
+        WHERE id = :id AND symbol=:symbol", \
+        id=session["user_id"], symbol=stock["symbol"])
+
+        # # if user doesn't has shares of that symbol, create new stock object
+        if not user_shares:
+            db.execute("INSERT INTO portfolio (name, shares, price, total, symbol, id) \
+                        VALUES(:name, :shares, :price, :total, :symbol, :id)", \
+                        name=stock["name"], shares=shares, price=usd(stock["price"]), \
+                        total=usd(shares * stock["price"]), \
+                        symbol=stock["symbol"], id=session["user_id"])
+
+        # Else increment the shares count
+        else:
+            shares_total = user_shares[0]["shares"] + shares
+            db.execute("UPDATE portfolio SET shares=:shares \
+                        WHERE id=:id AND symbol=:symbol", \
+                        shares=shares_total, id=session["user_id"], \
+                        symbol=stock["symbol"])
+
+        # return to index
+        return redirect(url_for("index.html"))
 
 @app.route("/history")
 @login_required
@@ -109,7 +137,7 @@ def history():
     """Show history of transactions."""
 
     histories = db.execute("SELECT * from histories WHERE id=:id", id=session["user_id"])
-    return render_template("/history", histories=histories)
+    return render_template("history.html", histories=histories)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -130,7 +158,8 @@ def login():
             return apology("must provide password")
 
         # query database for username
-        rows = db.execute("SELECT * FROM users WHERE username = :username", username=request.form.get("username"))
+        rows = db.execute("SELECT * FROM users WHERE username = :username", \
+                            username=request.form.get("username"))
 
         # ensure username exists and password is correct
         if len(rows) != 1 or not pwd_context.verify(request.form.get("password"), rows[0]["hash"]):
@@ -140,7 +169,7 @@ def login():
         session["user_id"] = rows[0]["id"]
 
         # redirect user to home page
-        return redirect(url_for("index"))
+        return redirect(url_for("index.html"))
 
     # else if user reached route via GET (as by clicking a link or via redirect)
     else:
@@ -154,7 +183,7 @@ def logout():
     session.clear()
 
     # redirect user to login form
-    return redirect(url_for("login"))
+    return redirect(url_for("login.html"))
 
 @app.route("/quote", methods=["GET", "POST"])
 @login_required
