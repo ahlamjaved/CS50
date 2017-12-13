@@ -160,44 +160,48 @@ def logout():
 @login_required
 def quote():
     """Get stock quote."""
-    return apology("TODO")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """Register user."""
 
     if request.method == "POST":
-        
+
         # verifies username was inputted
         if not request.form.get("username"):
-            return apology("Must provide username!")
+            return apology("Must provide username")
 
-        # verifies password was submitted 
+        # verifies password was submitted
         elif not request.form.get("password"):
-            return apology("Must provide password!")
+            return apology("Must provide password")
 
         # verifiy that both the password and the confirmation match
-        elif request.form.get("password") != request.form.get("password again"):
-            return apology("password does not match. Please try again.")
+        elif request.form.get("password") != request.form.get("confirmation"):
+            print(request.form.get("password"))
+            print(request.form.get("confirmation"))
+            return apology("password doesn't match")
+        else:
+            return render_template("index.html")
 
-        # now that the user entered username and both password and the confirmation
+        # # now that the user entered username and both password and the confirmation
         # insert the new user in the list of users within the db
         # this also sotres the password as a hash for security measures
-        esult = db.execute("INSERT INTO users (username, hash) \
+        result = db.execute("INSERT INTO users (username, hash) \
                              VALUES(:username, :hash)", \
                              username=request.form.get("username"), \
                              hash=pwd_context.encrypt(request.form.get("password")))
 
         if not result:
-            return apology("Sorry, this username already exists!")
+            return apology("Username already exist")
 
-        # remember the username that is currently logged in
+        # remember the user that is currently logged in
         session["user_id"] = result
 
-        # redirect the user to the homepage once logged in
-        return redirect("/index"))
+        # redirect the user to homepage once logged in
+        return redirect(url_for("index"))
+
     else:
-        return render_template("/register")
+        return render_template("register.html")
 
 @app.route("/sell", methods=["GET", "POST"])
 @login_required
