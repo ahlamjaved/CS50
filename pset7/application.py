@@ -91,6 +91,7 @@ def buy():
         # select cash
         money = db.execute("SELECT cash FROM users WHERE id = :id", \
                             id=session["user_id"])
+        print(money)
 
         # is money enough to buy stock
         if money["cash"] < stock["price"] * shares:
