@@ -1,8 +1,8 @@
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session, url_for
-from flask_session import Session 
+from flask_session import Session
 from passlib.apps import custom_app_context as pwd_context
-from tempfile import mkdtemp 
+from tempfile import mkdtemp
 
 from helpers import *
 
@@ -28,7 +28,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # configure CS50 Library to use SQLite database
-db = SQL("sqlite:///finance.db") #pylint: disable=not-callable; 
+db = SQL("sqlite:///finance.db") #pylint: disable=not-callable;
 
 @app.route("/")
 @login_required
@@ -91,14 +91,13 @@ def buy():
         # select cash
         money = db.execute("SELECT cash FROM users WHERE id = :id", \
                             id=session["user_id"])
-        print(money)
 
         # is money enough to buy stock
-        if money["cash"] < stock["price"] * shares:
+        if not money or float(money[0]["cash"]) < stock["price"] * shares:
             return apology("Sorry, not enough money!")
 
         # update history
-        db.execute("INSERT INTO histories (symbol, shares, price, id) \
+        db.execute("INSERT INTO history (symbol, shares, price, id) \
                     VALUES(:symbol, :shares, :price, :id)", \
                     symbol=stock["symbol"], shares=shares, \
                     price=usd(stock["price"]), id=session["user_id"])
@@ -205,7 +204,6 @@ def quote():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """Register user."""
-    print("hello, world!")
 
     if request.method == "POST":
 
@@ -236,8 +234,6 @@ def register():
 
         # remember the user that is currently logged in
         session["user_id"] = result
-        print(session)
-        print(session["user_id"])
 
         # redirect the user to homepage once logged in
         return redirect(url_for("index"))
