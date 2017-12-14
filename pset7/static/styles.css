@@ -5,6 +5,16 @@
     margin-right: auto;
     text-align: center;
 }
+.navbar
+{
+    padding: .5rem 1rem;
+}
+
+.navbar-brand 
+{
+    font-size: xx-large;
+}
+
 
 /* colors for navbar */
 .navbar-default .navbar-brand .blue
