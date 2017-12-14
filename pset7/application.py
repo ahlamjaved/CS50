@@ -136,8 +136,8 @@ def buy():
 def history():
     """Show history of transactions."""
 
-    histories = db.execute("SELECT * from histories WHERE id=:id", id=session["user_id"])
-    return render_template("history.html", histories=histories)
+    history = db.execute("SELECT * from history WHERE id=:id", id=session["user_id"])
+    return render_template("history.html", history=history)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -192,18 +192,19 @@ def quote():
 
     if request.method == "POST":
         rows = lookup(request.form.get("symbol"))
-        
+
         if not rows:
             return apology("Invalid Symbol")
-            
+
         return render_template("quoted.html", stock=rows)
-    
+
     else:
         return render_template("quote.html")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """Register user."""
+    print("hello, world!")
 
     if request.method == "POST":
 
@@ -220,8 +221,6 @@ def register():
             print(request.form.get("password"))
             print(request.form.get("confirmation"))
             return apology("password doesn't match")
-        else:
-            return render_template("index.html")
 
         # # now that the user entered username and both password and the confirmation
         # insert the new user in the list of users within the db
@@ -236,6 +235,8 @@ def register():
 
         # remember the user that is currently logged in
         session["user_id"] = result
+        print(session)
+        print(session["user_id"])
 
         # redirect the user to homepage once logged in
         return redirect(url_for("index"))
