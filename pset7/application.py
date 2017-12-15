@@ -260,3 +260,41 @@ def sell():
                 return apology("Shares must be greater than zero!")
         except:
             return apology("Invalid number of shares")
+        # select the symbol shares of that user
+        user_shares = db.execute("SELECT shares FROM portfolio \
+                                 WHERE id = :id AND symbol=:symbol", \
+                                 id=session["user_id"], symbol=stock["symbol"])
+
+        # check if enough shares to sell
+        if not user_shares or int(user_shares[0]["shares"]) < shares:
+            return apology("Not enough shares")
+
+        # update history of a sell
+        db.execute("INSERT INTO histories (symbol, shares, price, id) \
+                    VALUES(:symbol, :shares, :price, :id)", \
+                    symbol=stock["symbol"], shares=-shares, \
+                    price=usd(stock["price"]), id=session["user_id"])
+
+        # update user cash (increase)
+        db.execute("UPDATE users SET cash = cash + :purchase WHERE id = :id", \
+                    id=session["user_id"], \
+                    purchase=stock["price"] * float(shares))
+
+        # decrement the shares count
+        shares_total = user_shares[0]["shares"] - shares
+
+        # if after decrement is zero, delete shares from portfolio
+        if shares_total == 0:
+            db.execute("DELETE FROM portfolio \
+                        WHERE id=:id AND symbol=:symbol", \
+                        id=session["user_id"], \
+                        symbol=stock["symbol"])
+        # otherwise, update portfolio shares count
+        else:
+            db.execute("UPDATE portfolio SET shares=:shares \
+                    WHERE id=:id AND symbol=:symbol", \
+                    shares=shares_total, id=session["user_id"], \
+                    symbol=stock["symbol"])
+
+        # return to index
+        return redirect(url_for("index"))
