@@ -129,7 +129,7 @@ def buy():
                         symbol=stock["symbol"])
 
         # return to index
-        return redirect(url_for("index.html"))
+        return redirect(url_for("index"))
 
 @app.route("/history")
 @login_required
