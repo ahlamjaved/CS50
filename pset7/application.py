@@ -270,7 +270,7 @@ def sell():
             return apology("Not enough shares")
 
         # update history of a sell
-        db.execute("INSERT INTO histories (symbol, shares, price, id) \
+        db.execute("INSERT INTO history (symbol, shares, price, id) \
                     VALUES(:symbol, :shares, :price, :id)", \
                     symbol=stock["symbol"], shares=-shares, \
                     price=usd(stock["price"]), id=session["user_id"])
@@ -301,9 +301,23 @@ def sell():
 
 @app.route("/request", methods=["GET", "POST"])
 @login_required
-def request():
+def request_money():
     if request.method == "POST":
-        
-    else:
-        return render_template("request.html")
+        # verify the amount is a postive amount
+        try:
+            request_money = int(request.form.get("request"))
+            if request_money < 0:
+                return apology("Please request amount greater than zero")
+            elif request_money > 1000:
+                return apology("Cannot request more than $1,000 at once")
+        except:
+            return apology("Please request a valid amount.")
 
+        # update user cash (increase)
+        db.execute("UPDATE users SET cash = cash + :request_money WHERE id = :id", \
+                    request_money=request_money, id=session["user_id"])
+         # return to index
+        return redirect(url_for("index"))
+    else:
+        # go to end request
+        return render_template("request.html")
