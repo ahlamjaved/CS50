@@ -47,7 +47,7 @@ def index():
         shares = portfolio_symbol["shares"]
         stock = lookup(symbol)
         total = shares * stock["price"]
-        total.cash += total
+        total_cash += total
         db.execute("UPDATE portfolio SET price=:price, \
                     total=:total WHERE id=:id AND symbol=:symbol", \
                     price=usd(stock["price"]), \
@@ -169,7 +169,7 @@ def login():
         session["user_id"] = rows[0]["id"]
 
         # redirect user to home page
-        return redirect(url_for("index.html"))
+        return redirect(url_for("index"))
 
     # else if user reached route via GET (as by clicking a link or via redirect)
     else:
@@ -298,3 +298,12 @@ def sell():
 
         # return to index
         return redirect(url_for("index"))
+
+@app.route("/request", methods=["GET", "POST"])
+@login_required
+def request():
+    if request.method == "POST":
+        
+    else:
+        return render_template("request.html")
+
