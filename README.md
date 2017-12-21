@@ -15,3 +15,5 @@ Shortcuts to the following psets:
 * [pset4](./pset4)
 * [pset5](./pset5)
 * [pset6](./pset6)
+* [pset7](./pset7)
+* [pset8](./pset8)
