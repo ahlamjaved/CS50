@@ -37,7 +37,7 @@ $(function() {
     // options for map
     // https://developers.google.com/maps/documentation/javascript/reference#MapOptions
     var options = {
-        center: {lat: 37.4236, lng: -122.1619}, // Stanford, California
+        center: {lat: 43.0389, lng: 87.9065}, // Milwaukee, Wisconsin
         disableDefaultUI: true,
         mapTypeId: google.maps.MapTypeId.ROADMAP,
         maxZoom: 14,
@@ -99,7 +99,7 @@ function configure()
         templates: {
             suggestion: Handlebars.compile(
                 "<div>" +
-                "TODO" +
+                "{{ place_name }}, {{ admin_name1 }}, {{ postal_code }}" +
                 "</div>"
             )
         }
