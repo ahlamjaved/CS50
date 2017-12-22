@@ -20,7 +20,7 @@ if app.config["DEBUG"]:
         return response
 
 # configure CS50 Library to use SQLite database
-db = SQL("sqlite:///mashup.db")
+db = SQL("sqlite:///mashup.db") #pylint: disable=not-callable;
 
 @app.route("/")
 def index():
@@ -33,8 +33,21 @@ def index():
 def articles():
     """Look up articles for geo."""
 
-    # TODO
-    return jsonify([])
+    # get geo argument from HTML form
+    geo = request.args.get("geo")
+
+    # if the argument is missing then increase the RunTimeError
+    if not geo:
+        raise RuntimeError("Geo is not set")
+
+    #search for articles within that geo
+    articles = lookup(geo)
+
+    #return 6 articles as JSON objects 
+    if len(articles) > 6:
+        return jsonify([articles[0], articles[1], articles[2], articles[3], articles[4], articles[5], articles[6]])
+    else:
+    return jsonify([articles])
 
 @app.route("/search")
 def search():
