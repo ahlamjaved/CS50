@@ -63,7 +63,48 @@ $(function() {
  */
 function addMarker(place)
 {
-    // TODO
+    // extract the latitude and longitude of a place
+    var myLatLng = new google.maps.LatLng(place["latitude"], place["longitude"]);
+
+    // marker icon
+    var image = "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png";
+
+    // instantiate marker
+    var marker = new google.maps.Marker({
+        position: myLatLng,
+        map: map,
+        title: place["place_name"] +", "+ place["admin_name1"],
+        label: place["place_name"] +", "+ place["admin_name1"],
+        icon : image
+    });
+
+    // get articles for place
+    $.getJSON(Flask.url_for("articles"), {geo: place.postal_code}, function(articles) {
+
+        // Only display info window if articles exist
+        if (!$.isEmptyObject(articles))
+        {
+			// start Unordered List
+            var articlesContent = "<ul>";
+            for (var i = 0; i < articles.length; i++)
+            {
+				//Each list item is stored into articles String
+            	articlesContent += "<li><a target='_NEW' href='" + articles[i].link
+            	+ "'>" + articles[i].title + "</a></li>";
+            }
+        }
+
+        // closes unordered articles list
+		articlesContent += "</ul>";
+
+		// listen for clicks on map marker
+        google.maps.event.addListener(marker, 'click', function() {
+            showInfo(marker, articlesContent);
+		});
+    });
+
+    // add marker to map
+    markers.push(marker);
 }
 
 /**
@@ -140,7 +181,11 @@ function configure()
  */
 function removeMarkers()
 {
-    // TODO
+    // remove all markers from the map
+    for (var i = 0, n = markers.length; i < n; i++)
+    {
+	    markers[i].setMap(null);
+    }
 }
 
 /**
