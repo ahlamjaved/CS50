@@ -43,18 +43,30 @@ def articles():
     #search for articles within that geo
     articles = lookup(geo)
 
-    #return 6 articles as JSON objects 
+    #return 6 articles as JSON objects
     if len(articles) > 6:
-        return jsonify([articles[0], articles[1], articles[2], articles[3], articles[4], articles[5], articles[6]])
+        return jsonify([articles[0], articles[1], articles[2], articles[3],
+                        articles[4], articles[5], articles[6]])
     else:
-    return jsonify([articles])
+        return jsonify([articles])
 
 @app.route("/search")
 def search():
     """Search for places that match query."""
 
-    # TODO
-    return jsonify([])
+    # retrieve q from HTML form
+    q = request.args.get("q") + "%"
+
+    # Finds any postal code, city and state that start with q
+    place = db.execute("SELECT * FROM places WHERE postal_code \
+                                LIKE :q OR place_name LIKE :q OR admin_name1 LIKE :q", q=q)
+
+    # Return up to 10 places found as JSON object
+    if len(place) > 10:
+        return jsonify([place[0], place[1], place[2], place[3], place[4],
+                        place[5], place[6], place[7], place[8], place[9]])
+    else:
+        return jsonify([])
 
 @app.route("/update")
 def update():
