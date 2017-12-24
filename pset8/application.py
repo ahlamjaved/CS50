@@ -59,7 +59,7 @@ def search():
 
     # Finds any postal code, city and state that start with q
     place = db.execute("SELECT * FROM places WHERE postal_code \
-                                LIKE :q OR place_name LIKE :q OR admin_name1 LIKE :q", q=q)
+                        LIKE :q OR place_name LIKE :q OR admin_name1 LIKE :q", q=q)
 
     # Return up to 10 places found as JSON object
     if len(place) > 10:
